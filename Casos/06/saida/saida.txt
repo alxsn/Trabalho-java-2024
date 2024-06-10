@@ -1,0 +1,2 @@
+Digite um ano: 
+Tipo de veículo desconhecido para veículo SoSyM: K.
