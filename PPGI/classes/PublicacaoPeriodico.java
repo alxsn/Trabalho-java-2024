@@ -11,8 +11,9 @@ public class PublicacaoPeriodico extends Publicacao{
                          int numero,
                          int volumePeriodico,
                          int paginaInicial,
-                         int paginaFinal){
-        super(ano, siglaVeiculo, titulo, autores, numero, paginaInicial, paginaFinal);
+                         int paginaFinal,
+                         Veiculo veiculo){
+        super(ano, siglaVeiculo, titulo, autores, numero, paginaInicial, paginaFinal, veiculo);
         this.volumePeriodico = volumePeriodico;
     }
 }

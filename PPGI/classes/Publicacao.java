@@ -10,6 +10,7 @@ public abstract class Publicacao {
     protected int numero;
     protected int paginaInicial;
     protected int paginaFinal;
+    protected Veiculo veiculo;
 
     protected Publicacao(int ano,
                          String siglaVeiculo,
@@ -17,7 +18,8 @@ public abstract class Publicacao {
                          Map<Long, Docente> autores,
                          int numero,
                          int paginaInicial,
-                         int paginaFinal){
+                         int paginaFinal,
+                         Veiculo veiculo){
         this.ano=ano;
         this.siglaVeiculo=siglaVeiculo;
         this.titulo=titulo;
@@ -25,5 +27,6 @@ public abstract class Publicacao {
         this.numero=numero;
         this.paginaInicial=paginaInicial;
         this.paginaFinal=paginaFinal;
+        this.veiculo=veiculo;
     }
 }

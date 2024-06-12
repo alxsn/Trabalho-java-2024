@@ -6,6 +6,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
@@ -20,30 +21,37 @@ import classes.Publicacao;
 import classes.PublicacaoConferencia;
 import classes.PublicacaoPeriodico;
 import classes.Qualificacao;
+import classes.RegraPontuacao;
 import classes.Veiculo;
 
 public interface Leitura {
     public static void leDocentes(String caminho, Map<Long, Docente> docentes)
     throws FileNotFoundException, ParseException{
         Scanner scanner;
-        String linha;
-        String[] valores;
-        
-        //docentes
         String docentesCaminho = caminho.concat("/docentes.csv");
         scanner = new Scanner(new FileReader(docentesCaminho));
+
         //Consome o cabeçalho
         scanner.nextLine();
+
+        String linha;
+        String[] valores;        
+        
         Docente docente;
         long codigo;
         String nome;
         LocalDate dataNascimento;
         LocalDate dataIngresso;
+
         DateTimeFormatter dataFormato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        //Leitura e criação dos docentes
+
         while(scanner.hasNext()){
             linha = scanner.nextLine();
             valores = linha.split(";");
+            //remove os espaços
+            for(int i=0; i < valores.length; i++){
+                valores[i]=valores[i].trim();
+            }
             codigo = Long.parseLong(valores[0]);
             nome = valores[1];
             dataNascimento = LocalDate.parse(valores[2], dataFormato);
@@ -57,22 +65,30 @@ public interface Leitura {
     public static void leOcorrenciasDocentes(String caminho, Map<Long, Docente> docentes)
     throws FileNotFoundException, ParseException{
         Scanner scanner;
-
         String ocorrenciasCaminho = caminho.concat("/ocorrencias.csv");
         scanner = new Scanner(new FileReader(ocorrenciasCaminho));
+
         //Consome o cabeçalho
         scanner.nextLine();
+
         String linha;
         String[] valores;
+
         long codigo;
         Ocorrencia ocorrencia;
         String evento;
         LocalDate dataInicio, dataFim;
+
         DateTimeFormatter dataFormato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         Docente docente;
+
         while(scanner.hasNext()){
             linha = scanner.nextLine();
             valores = linha.split(";");
+            //remove os espaços
+            for(int i=0; i < valores.length; i++){
+                valores[i]=valores[i].trim();
+            }
             codigo = Long.parseLong(valores[0]);
             evento = valores[1];
             dataInicio = LocalDate.parse(valores[2], dataFormato);
@@ -80,6 +96,7 @@ public interface Leitura {
             ocorrencia = new Ocorrencia(codigo, evento, dataInicio, dataFim);
             docente = docentes.get(codigo);
             docente.setOcorrencias(ocorrencia);
+            ocorrencia.setDocente(docente);
         }
         scanner.close();
     }
@@ -89,24 +106,32 @@ public interface Leitura {
         Scanner scanner;
         String veiculosCaminho = caminho.concat("/veiculos.csv");
         scanner = new Scanner(new FileReader(veiculosCaminho));
+
         //Consome o cabeçalho
         scanner.nextLine();
+
         String linha;
         String[] valores;
+
         String sigla, nome, issn;
         char tipo;
         double fatorImpacto;
         Veiculo veiculo;
+
         NumberFormat numberFormat = NumberFormat.getInstance(Locale.of("pt", "BR"));
+
         while(scanner.hasNext()){
             linha = scanner.nextLine();
             valores = linha.split(";");
+            //remove os espaços
+            for(int i=0; i < valores.length; i++){
+                valores[i]=valores[i].trim();
+            }
             sigla = valores[0];
             nome = valores[1];
             tipo = valores[2].charAt(0);
             Number numero = numberFormat.parse(valores[3]);
             fatorImpacto = numero.doubleValue();
-            System.out.println(fatorImpacto);
             if(tipo=='P'){
                 issn = valores[4];
                 veiculo = new Periodico(sigla, nome, tipo, fatorImpacto, issn);
@@ -119,11 +144,13 @@ public interface Leitura {
         scanner.close();
     }
 
-    public static void lePublicacoes(String caminho, Map<Long, Docente> docentes,
-                                     Map<String, Veiculo> veiculos)
+    public static void lePublicacoes(String caminho,
+                                     Map<Long, Docente> docentes,
+                                     Map<String, Veiculo> veiculos,
+                                     ArrayList<Publicacao> publicacoes)
     throws FileNotFoundException, NumberFormatException{
         Scanner scanner;
-        String publicacoesCaminho = caminho.concat("/veiculos.csv");
+        String publicacoesCaminho = caminho.concat("/publicacoes.csv");
         scanner = new Scanner(new FileReader(publicacoesCaminho));
 
         //Consome o cabeçalho
@@ -151,11 +178,20 @@ public interface Leitura {
         while(scanner.hasNext()){
             linha = scanner.nextLine();
             valores = linha.split(";");
+            //remove os espaços
+            for(int i=0; i < valores.length; i++){
+                valores[i]=valores[i].trim();
+            }
             ano = Integer.parseInt(valores[0]);
             siglaVeiculo = valores[1];
             veiculo = veiculos.get(siglaVeiculo);
             titulo = valores[2];
             vetorAutores = valores[3].split(",");
+            //remove os espaços
+            for(int i=0; i < vetorAutores.length; i++){
+                vetorAutores[i]=vetorAutores[i].trim();
+            }
+            //map dos autores
             for(String valor : vetorAutores){
                 codigoAutor = Long.parseLong(valor);
                 docente = docentes.get(codigoAutor);
@@ -164,7 +200,7 @@ public interface Leitura {
             numero = Integer.parseInt(valores[4]);
             paginaInicial = Integer.parseInt(valores[7]);
             paginaFinal = Integer.parseInt(valores[8]);
-            if(veiculo.getTipo()=='P'){
+            if(veiculo.getTipo()=='P'){//é periodico
                 volume = Integer.parseInt(valores[5]);
                 publicacao = new PublicacaoPeriodico(ano,
                                                      siglaVeiculo,
@@ -173,7 +209,8 @@ public interface Leitura {
                                                      numero,
                                                      volume,
                                                      paginaInicial,
-                                                     paginaFinal);
+                                                     paginaFinal,
+                                                     veiculo);
             }            
             else{//é conferencia
                 local = valores[6];
@@ -184,9 +221,14 @@ public interface Leitura {
                                                        numero,
                                                        local,
                                                        paginaInicial,
-                                                       paginaFinal);
+                                                       paginaFinal,
+                                                       veiculo);
+            }
+            for(Map.Entry<Long, Docente> pair : autores.entrySet()){
+                pair.getValue().setPublicacao(publicacao);
             }
             veiculo.setPublicacao(publicacao);
+            publicacoes.add(publicacao);
         }
         scanner.close();
     }
@@ -212,17 +254,22 @@ public interface Leitura {
         while(scanner.hasNext()){
             linha = scanner.nextLine();
             valores = linha.split(";");
+            //remove os espaços
+            for(int i=0; i < valores.length; i++){
+                valores[i]=valores[i].trim();
+            }
             ano = Integer.parseInt(valores[0]);
             siglaVeiculo = valores[1];
             veiculo = veiculos.get(siglaVeiculo);
             quali = valores[2];
-            qualificacao = new Qualificacao(ano, siglaVeiculo, quali);
+            qualificacao = new Qualificacao(ano, siglaVeiculo, quali, veiculo);
             veiculo.setQualificacao(qualificacao);
         }
         scanner.close();
     }
 
-    public static void leRegrasPontuacao(String caminho)throws FileNotFoundException{
+    public static void leRegrasPontuacao(String caminho, Map<Integer, RegraPontuacao> regrasPontuacao)
+    throws FileNotFoundException, ParseException{
         Scanner scanner;
         String regrasPontuacaoCaminho = caminho.concat("/regras.csv");
         scanner = new Scanner(new FileReader(regrasPontuacaoCaminho));
@@ -237,31 +284,56 @@ public interface Leitura {
         LocalDate fimVigencia;
         DateTimeFormatter dataFormato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String[] qualis1;
-        int[] pontosQualis1;
+        double[] pontosQualis1;
         int qtdAnosPontos;
         String[] qualis2;
         int[] qtdMinimaArtigos;
         int qtdAnosArtigo;
-        int qtdMinimaPontos;
+        double qtdMinimaPontos;
+
+        RegraPontuacao regraPontuacao;
+        NumberFormat numberFormat = NumberFormat.getInstance(Locale.of("pt", "BR"));
 
         while(scanner.hasNext()){
             linha = scanner.nextLine();
             valores = linha.split(";");
+            //remove os espaços
+            for(int i=0; i < valores.length; i++){
+                valores[i]=valores[i].trim();
+            }
 
             inicioVigencia = LocalDate.parse(valores[0], dataFormato);
             fimVigencia = LocalDate.parse(valores[1], dataFormato);
             qualis1 = valores[2].split("-");
+            //converte o vetor de string em vetor de double
+            // pontosQualis1 = Arrays.stream(valores[3].split("-"))
+            //                       .mapToDouble(Double::parseDouble)
+            //                       .toArray();
+            pontosQualis1 = new double[valores[3].split("-").length];
+            for(int i=0; i < valores[3].split("-").length; i++){
+                Number numero = numberFormat.parse(valores[3].split("-")[i]);
+                pontosQualis1[i] = numero.doubleValue();
+            }
+            qtdAnosPontos = Integer.parseInt(valores[4]);
+            qualis2 = valores[5].split("-");
             //converte o vetor de string em vetor de inteiros
-            pontosQualis1 = Arrays.stream(valores[3].split("-"))
-                                  .mapToInt(Integer::parseInt)
-                                  .toArray();
-            qualis2 = valores[4].split("-");
-            //converte o vetor de string em vetor de inteiros
-            qtdMinimaArtigos = Arrays.stream(valores[5].split("-"))
+            qtdMinimaArtigos = Arrays.stream(valores[6].split("-"))
                                      .mapToInt(Integer::parseInt)
                                      .toArray();
-            qtdAnosArtigo = Integer.parseInt(valores[6]);
-            qtdMinimaPontos = Integer.parseInt(valores[7]);
+            qtdAnosArtigo = Integer.parseInt(valores[7]);
+            Number numero = numberFormat.parse(valores[8]);
+            qtdMinimaPontos = numero.doubleValue();
+
+            regraPontuacao = new RegraPontuacao(inicioVigencia,
+                                                fimVigencia,
+                                                qualis1,
+                                                pontosQualis1,
+                                                qtdAnosPontos,
+                                                qualis2,
+                                                qtdMinimaArtigos,
+                                                qtdAnosArtigo,
+                                                qtdMinimaPontos);
+            regrasPontuacao.put(inicioVigencia.getYear(), regraPontuacao);
         }
         scanner.close();
     }
