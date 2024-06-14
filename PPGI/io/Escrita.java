@@ -15,13 +15,32 @@ public interface Escrita {
                                                int ano,
                                                Map<Long, Docente> docentes,
                                                Map<String, Veiculo> veiculos,
-                                               Map<Integer, RegraPontuacao> regrasPontuacao)
+                                               ArrayList<RegraPontuacao> regrasPontuacao)
     throws FileNotFoundException{
         String recredenciamentoCaminho = caminho.concat("/saida/1-recredenciamento.csv");
         PrintWriter writer = new PrintWriter(recredenciamentoCaminho);
 
-        RegraPontuacao regraPontuacao = regrasPontuacao.get(ano);
-
+        RegraPontuacao regraPontuacao=null;
+        regrasPontuacao.sort((d1, d2) -> d1.getInicioVigencia().compareTo(d2.getInicioVigencia()));
+        for(int i=0; i < regrasPontuacao.size(); i++){
+            if(i <= (regrasPontuacao.size()-2)){
+                if(regrasPontuacao.get(i).getInicioVigencia().getYear() == ano &&
+                   regrasPontuacao.get(i).
+                   getInicioVigencia().
+                   isBefore(regrasPontuacao.get(i+1).getInicioVigencia()) &&
+                   regrasPontuacao.get(i+1).getInicioVigencia().getYear() == ano){
+                    regraPontuacao = regrasPontuacao.get(i);
+                }else if(regrasPontuacao.get(i).getInicioVigencia().getYear() == ano &&
+                regrasPontuacao.get(i+1).getInicioVigencia().getYear() != ano){
+                    regraPontuacao = regrasPontuacao.get(i);
+                }
+            }else{
+                if(regrasPontuacao.get(i).getInicioVigencia().getYear() == ano){
+                    regraPontuacao = regrasPontuacao.get(i);
+                }
+            }
+        }
+        System.out.println("O ano é "+regraPontuacao.getInicioVigencia());
         writer.println("Docente;Pontuação;Recredenciado?");
 
         Docente docente;
@@ -31,7 +50,7 @@ public interface Escrita {
                            ";"+
                            docente.calculaPontuacao(regraPontuacao)+
                            ";"+
-                           docente.ehRecredenciado());
+                           docente.ehRecredenciado(regraPontuacao));
         }
 
         writer.close();

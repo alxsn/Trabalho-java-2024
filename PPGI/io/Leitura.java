@@ -162,7 +162,7 @@ public interface Leitura {
         int ano;
         String siglaVeiculo;
         String titulo;
-        Map<Long, Docente> autores = new TreeMap<>();
+        Map<Long, Docente> autores;
         int numero;
         int volume;
         String local;
@@ -192,6 +192,7 @@ public interface Leitura {
                 vetorAutores[i]=vetorAutores[i].trim();
             }
             //map dos autores
+            autores = new TreeMap<>();
             for(String valor : vetorAutores){
                 codigoAutor = Long.parseLong(valor);
                 docente = docentes.get(codigoAutor);
@@ -268,7 +269,7 @@ public interface Leitura {
         scanner.close();
     }
 
-    public static void leRegrasPontuacao(String caminho, Map<Integer, RegraPontuacao> regrasPontuacao)
+    public static void leRegrasPontuacao(String caminho, ArrayList<RegraPontuacao> regrasPontuacao)
     throws FileNotFoundException, ParseException{
         Scanner scanner;
         String regrasPontuacaoCaminho = caminho.concat("/regras.csv");
@@ -293,7 +294,8 @@ public interface Leitura {
 
         RegraPontuacao regraPontuacao;
         NumberFormat numberFormat = NumberFormat.getInstance(Locale.of("pt", "BR"));
-
+        String[] pontosQualis1Aux;
+        
         while(scanner.hasNext()){
             linha = scanner.nextLine();
             valores = linha.split(";");
@@ -310,9 +312,13 @@ public interface Leitura {
             //                       .mapToDouble(Double::parseDouble)
             //                       .toArray();
             pontosQualis1 = new double[valores[3].split("-").length];
-            for(int i=0; i < valores[3].split("-").length; i++){
-                Number numero = numberFormat.parse(valores[3].split("-")[i]);
-                pontosQualis1[i] = numero.doubleValue();
+            pontosQualis1Aux = valores[3].split("-");
+            for(int i=0; i < pontosQualis1Aux.length; i++){
+                pontosQualis1Aux[i]=pontosQualis1Aux[i].trim();
+            }          
+            for(int i=0; i < pontosQualis1Aux.length; i++){
+                Number numero = numberFormat.parse(pontosQualis1Aux[i]);
+                pontosQualis1[i] = numero.doubleValue();//System.out.println(pontosQualis1[i]);
             }
             qtdAnosPontos = Integer.parseInt(valores[4]);
             qualis2 = valores[5].split("-");
@@ -333,7 +339,7 @@ public interface Leitura {
                                                 qtdMinimaArtigos,
                                                 qtdAnosArtigo,
                                                 qtdMinimaPontos);
-            regrasPontuacao.put(inicioVigencia.getYear(), regraPontuacao);
+            regrasPontuacao.add(regraPontuacao);
         }
         scanner.close();
     }

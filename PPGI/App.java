@@ -19,7 +19,8 @@ public class App {
     public static void main(String[] args) throws Exception {
         Map<Long, Docente> docentes = new TreeMap<Long, Docente>();
         Map<String, Veiculo> veiculos = new TreeMap<>();
-        Map<Integer, RegraPontuacao> regrasPontuacao = new TreeMap<>();
+        //Map<Integer, RegraPontuacao> regrasPontuacao = new TreeMap<>();
+        ArrayList<RegraPontuacao> regrasPontuacao = new ArrayList<>();
         ArrayList<Publicacao> publicacoes = new ArrayList<>();
 
         

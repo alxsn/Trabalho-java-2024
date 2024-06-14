@@ -24,7 +24,15 @@ public abstract class Veiculo {
         qualificacoes.add(quali);
     }
 
+    public ArrayList<Qualificacao> getQualificacoes(){
+        return qualificacoes;
+    }
+
     public char getTipo(){
         return tipo;
+    }
+
+    public String getNome(){
+        return nome;
     }
 }

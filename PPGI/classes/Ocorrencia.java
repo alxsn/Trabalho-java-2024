@@ -2,8 +2,6 @@ package classes;
 
 import java.time.LocalDate;
 
-import javax.swing.plaf.metal.OceanTheme;
-
 public class Ocorrencia {
     private long codigo;
     private String evento;
@@ -20,5 +18,17 @@ public class Ocorrencia {
 
     public void setDocente(Docente docente){
         this.docente=docente;
+    }
+
+    public LocalDate getDataInicio(){
+        return dataInicio;
+    }
+
+    public String getEvento(){
+        return evento;
+    }
+
+    public LocalDate getDataFim(){
+        return dataFim;
     }
 }

@@ -33,4 +33,20 @@ public class RegraPontuacao {
         this.qtdAnosArtigo=qtdAnosArtigo;
         this.qtdMinimaPontos=qtdMinimaPontos;
     }
+
+    public LocalDate getInicioVigencia(){
+        return inicioVigencia;
+    }
+
+    public LocalDate getFimVigencia(){
+        return fimVigencia;
+    }
+
+    public String[] getQualis1(){
+        return qualis1;
+    }
+
+    public double[] getPontosQualis1(){
+        return pontosQualis1;
+    }
 }

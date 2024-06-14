@@ -29,4 +29,12 @@ public abstract class Publicacao {
         this.paginaFinal=paginaFinal;
         this.veiculo=veiculo;
     }
+
+    public int getAno(){
+        return ano;
+    }
+
+    public Veiculo getVeiculo(){
+        return veiculo;
+    }
 }
