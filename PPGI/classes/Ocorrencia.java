@@ -3,6 +3,7 @@ package classes;
 import java.time.LocalDate;
 
 public class Ocorrencia {
+    public static final String[] TIPOS_OCORRENCIA = {"Coordenador", "Licença Maternidade", "Bolsista CNPq"};
     private long codigo;
     private String evento;
     private LocalDate dataInicio;

@@ -1,12 +1,12 @@
 package classes;
 
-import java.util.Map;
+import java.util.TreeMap;
 
 public abstract class Publicacao {
     protected int ano;
     protected String siglaVeiculo;
     protected String titulo;
-    protected Map<Long, Docente> autores;
+    protected TreeMap<Long, Docente> autores;
     protected int numero;
     protected int paginaInicial;
     protected int paginaFinal;
@@ -15,7 +15,7 @@ public abstract class Publicacao {
     protected Publicacao(int ano,
                          String siglaVeiculo,
                          String titulo,
-                         Map<Long, Docente> autores,
+                         TreeMap<Long, Docente> autores,
                          int numero,
                          int paginaInicial,
                          int paginaFinal,
@@ -32,6 +32,18 @@ public abstract class Publicacao {
 
     public int getAno(){
         return ano;
+    }
+
+    public String getSiglaVeiculo(){
+        return siglaVeiculo;
+    }
+
+    public String getTitulo(){
+        return titulo;
+    }
+
+    public TreeMap<Long, Docente> getAutores(){
+        return autores;
     }
 
     public Veiculo getVeiculo(){

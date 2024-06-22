@@ -1,13 +1,13 @@
 package classes;
 
-import java.util.Map;
+import java.util.TreeMap;
 
 public class PublicacaoPeriodico extends Publicacao{
     int volumePeriodico;
     public PublicacaoPeriodico(int ano,
                          String siglaVeiculo,
                          String titulo,
-                         Map<Long, Docente> autores,
+                         TreeMap<Long, Docente> autores,
                          int numero,
                          int volumePeriodico,
                          int paginaInicial,

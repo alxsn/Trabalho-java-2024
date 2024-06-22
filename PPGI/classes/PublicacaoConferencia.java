@@ -1,6 +1,6 @@
 package classes;
 
-import java.util.Map;
+import java.util.TreeMap;
 
 public class PublicacaoConferencia extends Publicacao{
     private String local;
@@ -8,7 +8,7 @@ public class PublicacaoConferencia extends Publicacao{
     public PublicacaoConferencia(int ano,
                          String siglaVeiculo,
                          String titulo,
-                         Map<Long, Docente> autores,
+                         TreeMap<Long, Docente> autores,
                          int numero,
                          String local,
                          int paginaInicial,

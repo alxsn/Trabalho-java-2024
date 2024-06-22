@@ -1,8 +1,10 @@
 package classes;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public abstract class Veiculo {
+    public static final char[] TIPOS_VEICULO = {'C', 'P'};
     protected String sigla, nome;
     protected char tipo;
     protected double fatorImpacto;
@@ -34,5 +36,23 @@ public abstract class Veiculo {
 
     public String getNome(){
         return nome;
+    }
+
+    public double getFatorImpacto(){
+        return fatorImpacto;
+    }
+
+    public Qualificacao getQualificacao(int ano){
+        qualificacoes.sort(Comparator.comparingInt(Qualificacao::getAno));
+        Qualificacao quali=null;
+
+        //pega a quali correspondente ao ano da regra
+        for(Qualificacao qualificacao : qualificacoes){
+            if(ano >= qualificacao.getAno()){
+                quali = qualificacao;
+            }
+        }
+
+        return quali;
     }
 }

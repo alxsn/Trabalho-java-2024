@@ -1,7 +1,6 @@
 package classes;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 public class RegraPontuacao {
     private LocalDate inicioVigencia;
@@ -48,5 +47,25 @@ public class RegraPontuacao {
 
     public double[] getPontosQualis1(){
         return pontosQualis1;
+    }
+
+    public int getQtdAnosPontos(){
+        return qtdAnosPontos;
+    }
+
+    public String[] getQualis2(){
+        return qualis2;
+    }
+
+    public int[] getQtdMinimaArtigos(){
+        return qtdMinimaArtigos;
+    }
+
+    public int getQtdAnosArtigo(){
+        return qtdAnosArtigo;
+    }
+
+    public double getQtdMinimaPontos(){
+        return qtdMinimaPontos;
     }
 }
